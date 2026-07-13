@@ -1,0 +1,7 @@
+{
+  "name": "skychat-front",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
