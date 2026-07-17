@@ -1,3 +1,48 @@
+/* ===== LAYOUT SPLIT (mobile-first: só a lista aparece) ===== */
+.split-layout {
+  display: flex;
+  height: 100%;
+  background: var(--sky-bg);
+}
+
+.list-pane {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--sky-bg);
+}
+
+.detail-pane {
+  display: none; /* escondido no mobile — lá a navegação usa /chat/:id em tela cheia */
+}
+
+@media (min-width: 961px) {
+  .list-pane {
+    width: 360px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--sky-border);
+  }
+
+  .detail-pane {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+
+    &.empty {
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--sky-text-dim);
+
+      ion-icon { font-size: 48px; color: var(--sky-border); }
+      p { font-size: 14px; margin: 0; }
+    }
+  }
+}
+
+/* ===== TOOLBAR / TITLE ===== */
 .sky-toolbar {
   --background: var(--sky-bg);
   --color: var(--sky-text);
@@ -10,15 +55,25 @@
   font-weight: 700;
   font-size: 20px;
 
-  .title-moon {
-    color: var(--sky-purple);
-    margin-right: 8px;
-    font-size: 20px;
-  }
+  .title-moon { color: var(--sky-purple); margin-right: 8px; font-size: 20px; }
 }
 
-.search-toolbar {
-  --min-height: 52px;
+.search-toolbar { --min-height: 52px; }
+
+/* No mobile mostra o cabeçalho "SkyChat" + tab bar própria da lista.
+   No desktop isso já vem da sidebar (app-shell), então escondemos aqui. */
+.list-title-toolbar { display: none; }
+
+.list-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--sky-text);
+}
+
+@media (min-width: 961px) {
+  .mobile-only-toolbar { display: none; }
+  .mobile-only-tabbar { display: none; }
+  .list-title-toolbar { display: flex; }
 }
 
 .sky-search {
@@ -30,14 +85,10 @@
   padding: 0 12px 8px;
 }
 
-.conversations-page {
-  --background: var(--sky-bg);
-}
+/* ===== LISTA ===== */
+.conversations-page { --background: var(--sky-bg); }
 
-.conv-list {
-  background: transparent;
-  padding-top: 4px;
-}
+.conv-list { background: transparent; padding-top: 4px; }
 
 .conv-item {
   --background: transparent;
@@ -46,86 +97,37 @@
   --inner-padding-end: 16px;
   --border-color: var(--sky-border);
   --min-height: 74px;
+
+  &.active { --background: var(--sky-bg-elevated); }
 }
 
 .avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #14162b;
-  font-weight: 700;
-  font-size: 15px;
-  position: relative;
-  margin-right: 4px;
+  width: 48px; height: 48px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #14162b; font-weight: 700; font-size: 15px;
+  position: relative; margin-right: 4px;
 }
 
 .online-dot {
-  position: absolute;
-  bottom: -1px;
-  right: -1px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--sky-online);
-  border: 2px solid var(--sky-bg);
+  position: absolute; bottom: -1px; right: -1px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--sky-online); border: 2px solid var(--sky-bg);
 }
 
-.conv-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.conv-name {
-  font-weight: 600;
-  font-size: 15.5px;
-  color: var(--sky-text);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.pin-icon {
-  font-size: 12px;
-  color: var(--sky-moon);
-}
-
-.conv-time {
-  font-size: 12px;
-  color: var(--sky-text-dim);
-}
-
-.conv-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 4px;
-}
-
+.conv-top { display: flex; justify-content: space-between; align-items: center; }
+.conv-name { font-weight: 600; font-size: 15.5px; color: var(--sky-text); display: flex; align-items: center; gap: 6px; }
+.pin-icon { font-size: 12px; color: var(--sky-moon); }
+.conv-time { font-size: 12px; color: var(--sky-text-dim); }
+.conv-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
 .conv-message {
-  font-size: 13.5px;
-  color: var(--sky-text-dim);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 220px;
+  font-size: 13.5px; color: var(--sky-text-dim);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px;
 }
 
 .unread-badge {
-  background: var(--sky-purple);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  min-width: 20px;
-  height: 20px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 6px;
+  background: var(--sky-purple); color: #fff; font-size: 11px; font-weight: 700;
+  min-width: 20px; height: 20px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; padding: 0 6px;
 }
 
 .sky-fab {
@@ -139,4 +141,62 @@
   --color: var(--sky-text-dim);
   --color-selected: var(--sky-purple);
   border-top: 1px solid var(--sky-border);
+}
+
+@media (min-width: 961px) {
+  .sky-tabbar { display: none; } /* no desktop a navegação principal fica no shell/tabbar do app */
+}
+
+/* ===== PAINEL DE CONVERSA (desktop) ===== */
+.contact-info { display: flex; align-items: center; gap: 10px; flex: 1; }
+.contact-avatar {
+  width: 36px; height: 36px; border-radius: 50%; color: #14162b;
+  display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;
+}
+.contact-name { font-size: 15px; font-weight: 600; color: var(--sky-text); }
+.contact-status { font-size: 11.5px; color: var(--sky-text-dim); &.online { color: var(--sky-online); } }
+
+.chat-page { --background: var(--sky-bg); }
+
+.day-divider {
+  display: flex; justify-content: center; margin: 16px 0;
+  span {
+    font-size: 11.5px; color: var(--sky-text-dim); background: var(--sky-bg-elevated);
+    padding: 4px 14px; border-radius: 100px;
+  }
+}
+
+.messages { display: flex; flex-direction: column; gap: 10px; padding: 0 16px 12px; }
+.bubble-row { display: flex; justify-content: flex-start; &.mine { justify-content: flex-end; } }
+
+.bubble {
+  max-width: 68%; background: var(--sky-bg-elevated); border-radius: 16px 16px 16px 4px;
+  padding: 10px 14px; display: flex; flex-direction: column; gap: 4px;
+  &.mine { background: var(--sky-purple); border-radius: 16px 16px 4px 16px; }
+}
+
+.bubble-text { font-size: 14.5px; color: var(--sky-text); line-height: 1.4; }
+.bubble.mine .bubble-text { color: #fff; }
+
+.bubble-time {
+  font-size: 10.5px; color: var(--sky-text-dim); align-self: flex-end;
+  display: flex; align-items: center; gap: 3px;
+  ion-icon { font-size: 13px; color: var(--sky-text-dim); &.seen { color: #38bdf8; } }
+}
+.bubble.mine .bubble-time { color: rgba(255,255,255,0.7); }
+
+.composer-toolbar { --background: var(--sky-bg-elevated); --border-color: var(--sky-border); padding: 6px 8px; }
+.composer { display: flex; align-items: center; gap: 4px; }
+.composer-icon { --color: var(--sky-text-dim); --padding-start: 6px; --padding-end: 6px; font-size: 22px; }
+
+.composer-input {
+  --background: var(--sky-bg); --color: var(--sky-text); --placeholder-color: var(--sky-text-dim);
+  --padding-start: 14px; --padding-top: 10px; --padding-bottom: 10px;
+  border-radius: 100px; flex: 1;
+}
+
+.send-btn {
+  --background: var(--sky-border); --background-activated: var(--sky-purple-dark);
+  --border-radius: 50%; width: 42px; height: 42px; margin: 0;
+  &.active { --background: var(--sky-purple); }
 }
