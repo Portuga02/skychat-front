@@ -1,0 +1,142 @@
+.sky-toolbar {
+  --background: var(--sky-bg);
+  --color: var(--sky-text);
+  padding: 0 4px;
+}
+
+.sky-title {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  font-size: 20px;
+
+  .title-moon {
+    color: var(--sky-purple);
+    margin-right: 8px;
+    font-size: 20px;
+  }
+}
+
+.search-toolbar {
+  --min-height: 52px;
+}
+
+.sky-search {
+  --background: var(--sky-bg-elevated);
+  --border-radius: 12px;
+  --color: var(--sky-text);
+  --placeholder-color: var(--sky-text-dim);
+  --icon-color: var(--sky-text-dim);
+  padding: 0 12px 8px;
+}
+
+.conversations-page {
+  --background: var(--sky-bg);
+}
+
+.conv-list {
+  background: transparent;
+  padding-top: 4px;
+}
+
+.conv-item {
+  --background: transparent;
+  --background-hover: var(--sky-bg-elevated);
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  --border-color: var(--sky-border);
+  --min-height: 74px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #14162b;
+  font-weight: 700;
+  font-size: 15px;
+  position: relative;
+  margin-right: 4px;
+}
+
+.online-dot {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--sky-online);
+  border: 2px solid var(--sky-bg);
+}
+
+.conv-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.conv-name {
+  font-weight: 600;
+  font-size: 15.5px;
+  color: var(--sky-text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pin-icon {
+  font-size: 12px;
+  color: var(--sky-moon);
+}
+
+.conv-time {
+  font-size: 12px;
+  color: var(--sky-text-dim);
+}
+
+.conv-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.conv-message {
+  font-size: 13.5px;
+  color: var(--sky-text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 220px;
+}
+
+.unread-badge {
+  background: var(--sky-purple);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+}
+
+.sky-fab {
+  --background: var(--sky-purple);
+  --background-activated: var(--sky-purple-dark);
+  --box-shadow: 0 8px 24px rgba(108, 92, 231, 0.4);
+}
+
+.sky-tabbar {
+  --background: var(--sky-bg-elevated);
+  --color: var(--sky-text-dim);
+  --color-selected: var(--sky-purple);
+  border-top: 1px solid var(--sky-border);
+}
