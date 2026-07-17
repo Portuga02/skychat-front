@@ -1,0 +1,75 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="sky-toolbar">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <div class="contact-info">
+      <div class="contact-avatar">{{ contactName.charAt(0) }}</div>
+      <div>
+        <div class="contact-name">{{ contactName }}</div>
+        <div class="contact-status" [class.online]="contactOnline">
+          {{ contactOnline ? 'Online' : 'Offline' }}
+        </div>
+      </div>
+    </div>
+
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon name="call-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button>
+        <ion-icon name="videocam-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="chat-page">
+  <div class="day-divider"><span>Hoje</span></div>
+
+  <div class="messages">
+    <div
+      *ngFor="let m of messages"
+      class="bubble-row"
+      [class.mine]="m.fromMe">
+      <div class="bubble" [class.mine]="m.fromMe">
+        <span class="bubble-text">{{ m.text }}</span>
+        <span class="bubble-time">
+          {{ m.time }}
+          <ion-icon *ngIf="m.fromMe" name="checkmark-done" [class.seen]="m.seen"></ion-icon>
+        </span>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar class="composer-toolbar">
+    <div class="composer">
+      <ion-button fill="clear" class="composer-icon">
+        <ion-icon name="add-circle-outline"></ion-icon>
+      </ion-button>
+
+      <ion-input
+        [(ngModel)]="draft"
+        placeholder="Digite uma mensagem..."
+        class="composer-input"
+        (keyup.enter)="send()">
+      </ion-input>
+
+      <ion-button fill="clear" class="composer-icon">
+        <ion-icon name="happy-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        class="send-btn"
+        [class.active]="draft.trim().length > 0"
+        (click)="send()">
+        <ion-icon [name]="draft.trim().length > 0 ? 'send' : 'mic'"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>
