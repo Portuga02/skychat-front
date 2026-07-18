@@ -1,0 +1,78 @@
+<div class="app-shell">
+
+  <aside class="sidebar">
+
+    <div class="sidebar-header">
+      <div class="logo">
+        <ion-icon name="chatbubble" class="logo-icon"></ion-icon>
+        <span>SkyChat</span>
+      </div>
+      <button class="icon-btn">
+        <ion-icon name="ellipsis-vertical"></ion-icon>
+      </button>
+    </div>
+
+    <div class="profile-row">
+      <div class="profile-avatar">{{ userName.charAt(0) }}</div>
+      <div class="profile-text">
+        <span class="profile-name">{{ userName }}</span>
+        <span class="profile-status" [class.online]="userOnline">
+          {{ userOnline ? 'Online' : 'Offline' }}
+        </span>
+      </div>
+      <button class="icon-btn">
+        <ion-icon name="ellipsis-vertical"></ion-icon>
+      </button>
+    </div>
+
+    <div class="sidebar-search">
+      <ion-icon name="search-outline"></ion-icon>
+      <span>Buscar</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a routerLink="/conversations" class="nav-item" [class.active]="activeTab === 'conversations'">
+        <ion-icon name="chatbubble-outline"></ion-icon>
+        <span>Conversas</span>
+        <span class="nav-badge" *ngIf="unreadConversations > 0">{{ unreadConversations }}</span>
+      </a>
+      <a class="nav-item" [class.active]="activeTab === 'calls'">
+        <ion-icon name="call-outline"></ion-icon>
+        <span>Chamadas</span>
+      </a>
+      <a class="nav-item" [class.active]="activeTab === 'contacts'">
+        <ion-icon name="people-outline"></ion-icon>
+        <span>Contatos</span>
+      </a>
+      <a class="nav-item" [class.active]="activeTab === 'files'">
+        <ion-icon name="folder-outline"></ion-icon>
+        <span>Arquivos</span>
+      </a>
+      <a routerLink="/settings" class="nav-item" [class.active]="activeTab === 'settings'">
+        <ion-icon name="settings-outline"></ion-icon>
+        <span>Configurações</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="theme-row">
+        <span>Tema</span>
+        <div class="theme-toggle">
+          <button [class.active]="!darkMode" (click)="setTheme(false)">
+            <ion-icon name="sunny"></ion-icon>
+          </button>
+          <button [class.active]="darkMode" (click)="setTheme(true)">
+            <ion-icon name="moon"></ion-icon>
+          </button>
+        </div>
+      </div>
+      <span class="version">v1.0.0</span>
+    </div>
+
+  </aside>
+
+  <div class="shell-content">
+    <ng-content></ng-content>
+  </div>
+
+</div>

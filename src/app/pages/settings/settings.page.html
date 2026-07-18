@@ -1,0 +1,60 @@
+<app-shell activeTab="settings">
+
+  <ion-header class="ion-no-border">
+    <ion-toolbar class="sky-toolbar">
+      <ion-title>Configurações</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="settings-page">
+    <div class="settings-wrap">
+
+      <section class="panel">
+        <h2 class="panel-title">Seu status</h2>
+        <div class="status-list">
+          <button
+            class="status-row"
+            *ngFor="let s of statusOptions"
+            [class.selected]="selectedStatus === s.key"
+            (click)="setStatus(s.key)">
+            <span class="status-dot" [style.background]="s.color"></span>
+            <span class="status-text">
+              <span class="status-label">{{ s.label }}</span>
+              <span class="status-desc">{{ s.description }}</span>
+            </span>
+            <ion-icon *ngIf="selectedStatus === s.key" name="checkmark-circle" class="status-check"></ion-icon>
+          </button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">Personalize seu tema</h2>
+
+        <div class="accent-row">
+          <button
+            class="accent-swatch"
+            *ngFor="let c of accentColors"
+            [style.background]="c.hex"
+            [class.selected]="selectedAccent === c.hex"
+            (click)="setAccent(c.hex)">
+            <ion-icon *ngIf="selectedAccent === c.hex" name="checkmark"></ion-icon>
+          </button>
+        </div>
+
+        <p class="sub-label">Ou escolha um tema</p>
+        <div class="mode-row">
+          <button class="mode-card" [class.selected]="!darkMode" (click)="setTheme(false)">
+            <ion-icon name="sunny-outline"></ion-icon>
+            <span>Claro</span>
+          </button>
+          <button class="mode-card" [class.selected]="darkMode" (click)="setTheme(true)">
+            <ion-icon name="moon-outline"></ion-icon>
+            <span>Escuro</span>
+          </button>
+        </div>
+      </section>
+
+    </div>
+  </ion-content>
+
+</app-shell>
