@@ -1,0 +1,45 @@
+<div class="call-window" [class.minimized]="minimized">
+
+  <div class="call-header">
+    <span class="call-title">
+      <ion-icon name="videocam"></ion-icon>
+      Chamada de vídeo
+    </span>
+    <div class="call-header-actions">
+      <button class="icon-btn" [attr.aria-label]="minimized ? 'Expandir chamada' : 'Minimizar chamada'" (click)="toggleMinimize()">
+        <ion-icon [name]="minimized ? 'expand-outline' : 'remove-outline'"></ion-icon>
+      </button>
+      <button class="icon-btn" aria-label="Fechar chamada" (click)="hangUp()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="call-body" *ngIf="!minimized">
+    <div class="remote-video">
+      <!-- TODO: <video> real ligado ao MediaStream remoto via WebRTC -->
+      <div class="avatar-placeholder">{{ contactName.charAt(0) }}</div>
+    </div>
+
+    <div class="local-video" [class.cam-off]="!camOn">
+      <!-- TODO: <video> real ligado ao MediaStream local -->
+      <ion-icon *ngIf="!camOn" name="videocam-off-outline"></ion-icon>
+    </div>
+
+    <div class="call-controls">
+      <button class="ctrl-btn" [class.off]="!micOn" [attr.aria-label]="micOn ? 'Desligar microfone' : 'Ligar microfone'" (click)="toggleMic()">
+        <ion-icon [name]="micOn ? 'mic-outline' : 'mic-off-outline'"></ion-icon>
+      </button>
+      <button class="ctrl-btn" [class.off]="!camOn" [attr.aria-label]="camOn ? 'Desligar câmera' : 'Ligar câmera'" (click)="toggleCam()">
+        <ion-icon [name]="camOn ? 'videocam-outline' : 'videocam-off-outline'"></ion-icon>
+      </button>
+      <button class="ctrl-btn more" aria-label="Mais opções">
+        <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+      </button>
+      <button class="ctrl-btn hangup" aria-label="Encerrar chamada" (click)="hangUp()">
+        <ion-icon name="call-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+</div>

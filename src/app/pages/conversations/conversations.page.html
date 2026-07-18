@@ -1,78 +1,179 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar class="sky-toolbar">
-    <ion-title class="sky-title">
-      <ion-icon name="moon" class="title-moon"></ion-icon>
-      SkyChat
-    </ion-title>
-    <ion-buttons slot="end">
-      <ion-button>
-        <ion-icon name="ellipsis-vertical" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
+<app-shell activeTab="conversations" [unreadConversations]="conversations.length ? 3 : 0">
 
-  <ion-toolbar class="sky-toolbar search-toolbar">
-    <ion-searchbar
-      [(ngModel)]="searchTerm"
-      placeholder="Pesquisar conversas"
-      class="sky-search"
-      show-clear-button="focus">
-    </ion-searchbar>
-  </ion-toolbar>
-</ion-header>
+  <div class="split-layout">
 
-<ion-content class="conversations-page">
-  <ion-list class="conv-list" lines="none">
-    <ion-item
-      *ngFor="let c of filtered"
-      button
-      detail="false"
-      class="conv-item"
-      (click)="openChat(c)">
+    <!-- COLUNA ESQUERDA: lista (sempre visível) -->
+    <div class="list-pane">
+      <ion-header class="ion-no-border">
+        <ion-toolbar class="sky-toolbar mobile-only-toolbar">
+          <ion-title class="sky-title">
+            <ion-icon name="moon" class="title-moon"></ion-icon>
+            SkyChat
+          </ion-title>
+          <ion-buttons slot="end">
+            <ion-button>
+              <ion-icon name="ellipsis-vertical" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
 
-      <div class="avatar" [style.background]="c.avatarColor" slot="start">
-        {{ c.avatarInitials }}
-        <span class="online-dot" *ngIf="c.online"></span>
+        <ion-toolbar class="sky-toolbar list-title-toolbar">
+          <ion-title class="list-title">Conversas</ion-title>
+          <ion-buttons slot="end">
+            <ion-button>
+              <ion-icon name="ellipsis-vertical" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+
+        <ion-toolbar class="sky-toolbar search-toolbar">
+          <ion-searchbar
+            [(ngModel)]="searchTerm"
+            placeholder="Pesquisar conversas"
+            class="sky-search"
+            show-clear-button="focus">
+          </ion-searchbar>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="conversations-page">
+        <ion-list class="conv-list" lines="none">
+          <ion-item
+            *ngFor="let c of filtered"
+            button
+            detail="false"
+            class="conv-item"
+            [class.active]="selected?.id === c.id"
+            (click)="openChat(c)">
+
+            <div class="avatar" [style.background]="c.avatarColor" slot="start">
+              {{ c.avatarInitials }}
+              <span class="online-dot" *ngIf="c.online"></span>
+            </div>
+
+            <ion-label>
+              <div class="conv-top">
+                <span class="conv-name">
+                  {{ c.name }}
+                  <ion-icon *ngIf="c.pinned" name="star" class="pin-icon"></ion-icon>
+                </span>
+                <span class="conv-time">{{ c.time }}</span>
+              </div>
+              <div class="conv-bottom">
+                <span class="conv-message">{{ c.lastMessage }}</span>
+                <span class="unread-badge" *ngIf="c.unread > 0">{{ c.unread }}</span>
+              </div>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+          <ion-fab-button class="sky-fab">
+            <ion-icon name="add"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      </ion-content>
+
+      <ion-tab-bar class="sky-tabbar mobile-only-tabbar">
+        <ion-tab-button selected>
+          <ion-icon name="chatbubble"></ion-icon>
+          <ion-label>Conversas</ion-label>
+        </ion-tab-button>
+        <ion-tab-button>
+          <ion-icon name="call-outline"></ion-icon>
+          <ion-label>Chamadas</ion-label>
+        </ion-tab-button>
+        <ion-tab-button>
+          <ion-icon name="people-outline"></ion-icon>
+          <ion-label>Contatos</ion-label>
+        </ion-tab-button>
+        <ion-tab-button routerLink="/settings">
+          <ion-icon name="settings-outline"></ion-icon>
+          <ion-label>Config.</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </div>
+
+    <!-- COLUNA DIREITA: conversa selecionada (só aparece em telas largas) -->
+    <div class="detail-pane" *ngIf="selected; else emptyState">
+      <ion-header class="ion-no-border">
+        <ion-toolbar class="sky-toolbar">
+          <div class="contact-info">
+            <div class="contact-avatar" [style.background]="selected.avatarColor">
+              {{ selected.avatarInitials }}
+            </div>
+            <div>
+              <div class="contact-name">{{ selected.name }}</div>
+              <div class="contact-status" [class.online]="selected.online">
+                {{ selected.online ? 'Online' : 'Offline' }}
+              </div>
+            </div>
+          </div>
+          <ion-buttons slot="end">
+            <ion-button>
+              <ion-icon name="call-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-button (click)="startVideoCall()">
+              <ion-icon name="videocam-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-button>
+              <ion-icon name="ellipsis-vertical" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="chat-page">
+        <div class="day-divider"><span>Hoje</span></div>
+        <div class="messages">
+          <div *ngFor="let m of activeMessages" class="bubble-row" [class.mine]="m.fromMe">
+            <div class="bubble" [class.mine]="m.fromMe">
+              <span class="bubble-text">{{ m.text }}</span>
+              <span class="bubble-time">
+                {{ m.time }}
+                <ion-icon *ngIf="m.fromMe" name="checkmark-done" [class.seen]="m.seen"></ion-icon>
+              </span>
+            </div>
+          </div>
+        </div>
+      </ion-content>
+
+      <ion-footer class="ion-no-border">
+        <ion-toolbar class="composer-toolbar">
+          <div class="composer">
+            <ion-button fill="clear" class="composer-icon">
+              <ion-icon name="add-circle-outline"></ion-icon>
+            </ion-button>
+            <ion-input
+              [(ngModel)]="draft"
+              placeholder="Digite uma mensagem..."
+              class="composer-input"
+              (keyup.enter)="send()">
+            </ion-input>
+            <ion-button fill="clear" class="composer-icon">
+              <ion-icon name="happy-outline"></ion-icon>
+            </ion-button>
+            <ion-button class="send-btn" [class.active]="draft.trim().length > 0" (click)="send()">
+              <ion-icon [name]="draft.trim().length > 0 ? 'send' : 'mic'"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-toolbar>
+      </ion-footer>
+    </div>
+
+    <ng-template #emptyState>
+      <div class="detail-pane empty">
+        <ion-icon name="moon-outline"></ion-icon>
+        <p>Selecione uma conversa para começar</p>
       </div>
+    </ng-template>
 
-      <ion-label>
-        <div class="conv-top">
-          <span class="conv-name">
-            {{ c.name }}
-            <ion-icon *ngIf="c.pinned" name="star" class="pin-icon"></ion-icon>
-          </span>
-          <span class="conv-time">{{ c.time }}</span>
-        </div>
-        <div class="conv-bottom">
-          <span class="conv-message">{{ c.lastMessage }}</span>
-          <span class="unread-badge" *ngIf="c.unread > 0">{{ c.unread }}</span>
-        </div>
-      </ion-label>
-    </ion-item>
-  </ion-list>
+  </div>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button class="sky-fab">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-</ion-content>
+  <app-video-call
+    *ngIf="showVideoCall && selected"
+    [contactName]="selected.name"
+    (close)="endVideoCall()">
+  </app-video-call>
 
-<ion-tab-bar class="sky-tabbar">
-  <ion-tab-button selected>
-    <ion-icon name="chatbubble"></ion-icon>
-    <ion-label>Conversas</ion-label>
-  </ion-tab-button>
-  <ion-tab-button>
-    <ion-icon name="call-outline"></ion-icon>
-    <ion-label>Chamadas</ion-label>
-  </ion-tab-button>
-  <ion-tab-button>
-    <ion-icon name="people-outline"></ion-icon>
-    <ion-label>Contatos</ion-label>
-  </ion-tab-button>
-  <ion-tab-button>
-    <ion-icon name="settings-outline"></ion-icon>
-    <ion-label>Config.</ion-label>
-  </ion-tab-button>
-</ion-tab-bar>
+</app-shell>
