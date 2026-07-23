@@ -8,11 +8,6 @@
   height: 100%;
   width: 100%;
 }
-.app-shell {
-  display: flex;
-  height: 100%;
-  width: 100%;
-}
 
 /* No mobile a sidebar some inteira — a navegação continua pela tab-bar de cada página */
 .sidebar {
@@ -98,6 +93,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  cursor: pointer;
 }
 
 .profile-text {
@@ -105,6 +101,7 @@
   flex-direction: column;
   flex: 1;
   min-width: 0;
+  cursor: pointer;
 }
 
 .profile-name {

@@ -1,0 +1,41 @@
+<app-shell activeTab="calls">
+
+  <ion-header class="ion-no-border">
+    <ion-toolbar class="sky-toolbar">
+      <ion-title>Chamadas</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="calls-page">
+    <ion-list class="call-list" lines="none">
+      <ion-item *ngFor="let c of calls" button detail="false" class="call-item">
+
+        <div class="avatar" [style.background]="c.avatarColor" slot="start">
+          {{ c.avatarInitials }}
+        </div>
+
+        <ion-label>
+          <div class="call-name" [class.missed]="c.type === 'missed'">{{ c.name }}</div>
+          <div class="call-meta">
+            <ion-icon [name]="iconFor(c)" [class.missed]="c.type === 'missed'"></ion-icon>
+            {{ c.time }}
+          </div>
+        </ion-label>
+
+        <ion-button
+          fill="clear"
+          slot="end"
+          [attr.aria-label]="c.kind === 'video' ? 'Ligar em vídeo para ' + c.name : 'Ligar para ' + c.name"
+          (click)="redial(c)">
+          <ion-icon [name]="c.kind === 'video' ? 'videocam-outline' : 'call-outline'" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+
+    <div class="empty-state" *ngIf="calls.length === 0">
+      <ion-icon name="call-outline"></ion-icon>
+      <p>Nenhuma chamada ainda</p>
+    </div>
+  </ion-content>
+
+</app-shell>

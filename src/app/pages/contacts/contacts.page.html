@@ -1,0 +1,56 @@
+<app-shell activeTab="contacts">
+
+  <ion-header class="ion-no-border">
+    <ion-toolbar class="sky-toolbar">
+      <ion-title>Contatos</ion-title>
+      <ion-buttons slot="end">
+        <ion-button aria-label="Adicionar contato">
+          <ion-icon name="person-add-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+    <ion-toolbar class="sky-toolbar search-toolbar">
+      <ion-searchbar
+        [(ngModel)]="searchTerm"
+        placeholder="Pesquisar contatos"
+        class="sky-search"
+        show-clear-button="focus">
+      </ion-searchbar>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="contacts-page">
+    <ion-list class="contact-list" lines="none">
+      <ion-item
+        *ngFor="let c of filtered"
+        button
+        detail="false"
+        class="contact-item"
+        (click)="openConversation(c)">
+
+        <div class="avatar" [style.background]="c.avatarColor" slot="start">
+          {{ c.avatarInitials }}
+          <span class="online-dot" *ngIf="c.online"></span>
+        </div>
+
+        <ion-label>
+          <div class="contact-name">
+            {{ c.name }}
+            <ion-icon *ngIf="c.favorite" name="star" class="fav-icon"></ion-icon>
+          </div>
+          <div class="contact-status">{{ c.status }}</div>
+        </ion-label>
+
+        <ion-button fill="clear" slot="end" aria-label="Iniciar chamada de voz" (click)="$event.stopPropagation()">
+          <ion-icon name="call-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+
+    <div class="empty-state" *ngIf="filtered.length === 0">
+      <ion-icon name="people-outline"></ion-icon>
+      <p>Nenhum contato encontrado</p>
+    </div>
+  </ion-content>
+
+</app-shell>

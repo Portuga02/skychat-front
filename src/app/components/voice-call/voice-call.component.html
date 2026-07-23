@@ -1,0 +1,31 @@
+<div class="voice-call-window">
+
+  <div class="voice-header">
+    <span class="voice-title">
+      <ion-icon name="call"></ion-icon>
+      Chamada de voz
+    </span>
+    <button class="icon-btn" aria-label="Fechar chamada" (click)="hangUp()">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+  </div>
+
+  <div class="voice-body">
+    <div class="avatar-placeholder">{{ contactName.charAt(0) }}</div>
+    <div class="contact-name">{{ contactName }}</div>
+    <div class="call-timer">{{ formattedTime }}</div>
+
+    <div class="voice-controls">
+      <button class="ctrl-btn" [class.off]="!micOn" [attr.aria-label]="micOn ? 'Desligar microfone' : 'Ligar microfone'" (click)="toggleMic()">
+        <ion-icon [name]="micOn ? 'mic-outline' : 'mic-off-outline'"></ion-icon>
+      </button>
+      <button class="ctrl-btn" [class.active]="speakerOn" [attr.aria-label]="speakerOn ? 'Desligar viva-voz' : 'Ligar viva-voz'" (click)="toggleSpeaker()">
+        <ion-icon name="volume-high-outline"></ion-icon>
+      </button>
+      <button class="ctrl-btn hangup" aria-label="Encerrar chamada" (click)="hangUp()">
+        <ion-icon name="call-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,57 @@
+.sky-toolbar { --background: var(--sky-bg); --color: var(--sky-text); }
+.files-page { --background: var(--sky-bg); }
+
+.filter-toolbar { --min-height: 48px; }
+
+.filter-row {
+  display: flex; gap: 8px; padding: 4px 16px 10px; overflow-x: auto;
+}
+
+.filter-chip {
+  background: var(--sky-bg-elevated);
+  border: 1px solid var(--sky-border);
+  color: var(--sky-text-dim);
+  border-radius: 100px;
+  padding: 6px 14px;
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &.active {
+    background: var(--sky-purple);
+    border-color: var(--sky-purple);
+    color: #fff;
+  }
+}
+
+.file-list { background: transparent; padding-top: 4px; }
+
+.file-item {
+  --background: transparent;
+  --background-hover: var(--sky-bg-elevated);
+  --padding-start: 16px;
+  --inner-padding-end: 12px;
+  --border-color: var(--sky-border);
+  --min-height: 64px;
+}
+
+.file-icon {
+  width: 42px; height: 42px; border-radius: 10px;
+  background: var(--sky-bg-elevated-2);
+  display: flex; align-items: center; justify-content: center;
+  margin-right: 8px;
+
+  ion-icon { font-size: 20px; color: var(--sky-purple); }
+}
+
+.file-name { font-weight: 600; font-size: 14px; color: var(--sky-text); }
+.file-meta { font-size: 12px; color: var(--sky-text-dim); margin-top: 2px; }
+
+.empty-state {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; margin-top: 80px; color: var(--sky-text-dim);
+
+  ion-icon { font-size: 40px; color: var(--sky-border); }
+  p { font-size: 13.5px; margin: 0; }
+}

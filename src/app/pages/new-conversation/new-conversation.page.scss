@@ -1,0 +1,57 @@
+.sky-toolbar { --background: var(--sky-bg); --color: var(--sky-text); }
+.search-toolbar { --min-height: 52px; }
+
+.sky-search {
+  --background: var(--sky-bg-elevated);
+  --border-radius: 12px;
+  --color: var(--sky-text);
+  --placeholder-color: var(--sky-text-dim);
+  --icon-color: var(--sky-text-dim);
+  padding: 0 12px 8px;
+}
+
+.new-conversation-page { --background: var(--sky-bg); }
+
+.section-label {
+  font-size: 11.5px;
+  color: var(--sky-text-dim);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  padding: 12px 16px 4px;
+  margin: 0;
+}
+
+.contact-list { background: transparent; }
+
+.contact-item {
+  --background: transparent;
+  --background-hover: var(--sky-bg-elevated);
+  --padding-start: 16px;
+  --inner-padding-end: 12px;
+  --border-color: var(--sky-border);
+  --min-height: 64px;
+}
+
+.avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #14162b; font-weight: 700; font-size: 14px;
+  position: relative; margin-right: 4px;
+}
+
+.online-dot {
+  position: absolute; bottom: -1px; right: -1px;
+  width: 11px; height: 11px; border-radius: 50%;
+  background: var(--sky-online); border: 2px solid var(--sky-bg);
+}
+
+.contact-name { font-weight: 600; font-size: 14.5px; color: var(--sky-text); }
+.contact-status { font-size: 12px; color: var(--sky-text-dim); margin-top: 2px; }
+
+.empty-state {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; margin-top: 80px; color: var(--sky-text-dim);
+
+  ion-icon { font-size: 40px; color: var(--sky-border); }
+  p { font-size: 13.5px; margin: 0; }
+}

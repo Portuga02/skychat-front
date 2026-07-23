@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { VideoCallComponent } from '../../components/video-call/video-call.component';
+import { VoiceCallComponent } from '../../components/voice-call/voice-call.component';
 import { ShellComponent } from '../../components/shell/shell.component';
 
 interface Conversation {
@@ -31,7 +32,7 @@ const DESKTOP_BREAKPOINT = 961;
 @Component({
   selector: 'app-conversations',
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule, VideoCallComponent, ShellComponent],
+  imports: [CommonModule, FormsModule, IonicModule, VideoCallComponent, VoiceCallComponent, ShellComponent, RouterLink],
   templateUrl: './conversations.page.html',
   styleUrls: ['./conversations.page.scss'],
 })
@@ -40,6 +41,7 @@ export class ConversationsPage {
   selected: Conversation | null = null;
   draft = '';
   showVideoCall = false;
+  showVoiceCall = false;
 
   // TODO: substituir por dados reais vindos do WebSocket/STOMP + API
   conversations: Conversation[] = [
@@ -106,5 +108,20 @@ export class ConversationsPage {
 
   endVideoCall() {
     this.showVideoCall = false;
+  }
+
+  startVoiceCall() {
+    this.showVoiceCall = true;
+  }
+
+  endVoiceCall() {
+    this.showVoiceCall = false;
+  }
+  sair() {
+    // Remove os dados do usuário salvos no login
+    localStorage.removeItem('usuario_logado');
+
+    // Redireciona de volta para a tela de login
+    this.router.navigateByUrl('/login');
   }
 }

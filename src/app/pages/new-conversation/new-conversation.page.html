@@ -1,0 +1,47 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="sky-toolbar">
+    <ion-buttons slot="start">
+      <ion-button aria-label="Fechar" (click)="close()">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Nova conversa</ion-title>
+  </ion-toolbar>
+  <ion-toolbar class="sky-toolbar search-toolbar">
+    <ion-searchbar
+      [(ngModel)]="searchTerm"
+      placeholder="Buscar contato"
+      class="sky-search"
+      show-clear-button="focus">
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="new-conversation-page">
+  <p class="section-label">Iniciar conversa com</p>
+
+  <ion-list class="contact-list" lines="none">
+    <ion-item
+      *ngFor="let c of filtered"
+      button
+      detail="false"
+      class="contact-item"
+      (click)="startChat(c)">
+
+      <div class="avatar" [style.background]="c.avatarColor" slot="start">
+        {{ c.avatarInitials }}
+        <span class="online-dot" *ngIf="c.online"></span>
+      </div>
+
+      <ion-label>
+        <div class="contact-name">{{ c.name }}</div>
+        <div class="contact-status">{{ c.online ? 'Online' : 'Offline' }}</div>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <div class="empty-state" *ngIf="filtered.length === 0">
+    <ion-icon name="search-outline"></ion-icon>
+    <p>Nenhum contato encontrado</p>
+  </div>
+</ion-content>

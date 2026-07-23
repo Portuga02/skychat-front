@@ -7,20 +7,20 @@
         <ion-icon name="chatbubble" class="logo-icon"></ion-icon>
         <span>SkyChat</span>
       </div>
-      <button class="icon-btn">
+      <button class="icon-btn" aria-label="Mais opções">
         <ion-icon name="ellipsis-vertical"></ion-icon>
       </button>
     </div>
 
     <div class="profile-row">
-      <div class="profile-avatar">{{ userName.charAt(0) }}</div>
-      <div class="profile-text">
+      <div class="profile-avatar" routerLink="/profile" role="button" tabindex="0">{{ userName.charAt(0) }}</div>
+      <div class="profile-text" routerLink="/profile" role="button" tabindex="0">
         <span class="profile-name">{{ userName }}</span>
         <span class="profile-status" [class.online]="userOnline">
           {{ userOnline ? 'Online' : 'Offline' }}
         </span>
       </div>
-      <button class="icon-btn">
+      <button class="icon-btn" aria-label="Mais opções do perfil">
         <ion-icon name="ellipsis-vertical"></ion-icon>
       </button>
     </div>
@@ -36,15 +36,15 @@
         <span>Conversas</span>
         <span class="nav-badge" *ngIf="unreadConversations > 0">{{ unreadConversations }}</span>
       </a>
-      <a class="nav-item" [class.active]="activeTab === 'calls'">
+      <a routerLink="/calls" class="nav-item" [class.active]="activeTab === 'calls'">
         <ion-icon name="call-outline"></ion-icon>
         <span>Chamadas</span>
       </a>
-      <a class="nav-item" [class.active]="activeTab === 'contacts'">
+      <a routerLink="/contacts" class="nav-item" [class.active]="activeTab === 'contacts'">
         <ion-icon name="people-outline"></ion-icon>
         <span>Contatos</span>
       </a>
-      <a class="nav-item" [class.active]="activeTab === 'files'">
+      <a routerLink="/files" class="nav-item" [class.active]="activeTab === 'files'">
         <ion-icon name="folder-outline"></ion-icon>
         <span>Arquivos</span>
       </a>

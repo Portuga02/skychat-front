@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { RouterLink } from '@angular/router';
 
-export type ShellTab = 'conversations' | 'calls' | 'contacts' | 'files' | 'settings';
+export type ShellTab = 'conversations' | 'calls' | 'contacts' | 'files' | 'settings' | 'profile';
 
 @Component({
   selector: 'app-shell',
