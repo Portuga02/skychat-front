@@ -7,7 +7,7 @@
     </ion-buttons>
 
     <div class="contact-info">
-      <div class="contact-avatar">{{ contactName.charAt(0) }}</div>
+      <div class="contact-avatar">{{ contactName ? contactName.charAt(0) : '?' }}</div>
       <div>
         <div class="contact-name">{{ contactName }}</div>
         <div class="contact-status" [class.online]="contactOnline">

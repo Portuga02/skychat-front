@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <!-- Botão de voltar para a tela de conversas -->
+      <ion-back-button defaultHref="/conversations"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Nova Conversa</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Exibe o spinner enquanto busca do banco -->
+  <div *ngIf="loading" class="ion-text-center ion-padding">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <!-- Exibe erro se a API falhar -->
+  <div *ngIf="error" class="ion-text-center ion-padding" style="color: var(--ion-color-danger);">
+    {{ error }}
+  </div>
+
+  <!-- Estado vazio: caso você seja o único cadastrado no banco -->
+  <div *ngIf="!loading && contatos.length === 0 && !error" class="ion-text-center ion-padding">
+    <p>Nenhum outro usuário encontrado no sistema ainda.</p>
+  </div>
+
+  <!-- Lista de contatos -->
+  <ion-list *ngIf="!loading && contatos.length > 0">
+    <!-- button="true" dá o efeito de clique nativo na lista -->
+    <ion-item button="true" *ngFor="let contato of contatos" (click)="iniciarConversa(contato.id)">
+
+      <!-- Avatar com foto ou uma imagem padrão -->
+      <ion-avatar slot="start">
+        <img [src]="contato.fotoUrl || 'https://ionicframework.com/docs/img/demos/avatar.svg'" />
+      </ion-avatar>
+
+      <ion-label>
+        <h2>{{ contato.nome }}</h2>
+        <p>{{ contato.email }}</p>
+      </ion-label>
+
+    </ion-item>
+  </ion-list>
+</ion-content>
