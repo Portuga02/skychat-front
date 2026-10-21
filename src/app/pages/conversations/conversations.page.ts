@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { 
   IonContent, IonList, IonItem, IonLabel, IonHeader,
-  IonToolbar, IonTitle, IonFab, IonFabButton, IonIcon
+  IonToolbar, IonTitle, IonFab, IonFabButton, IonIcon,
+  IonMenu, IonButtons, IonMenuButton, IonSearchbar, 
+  IonChip, IonAvatar, IonBadge, IonButton, MenuController
 } from '@ionic/angular/standalone';
 import { ConversationsService } from '../../services/conversations.service';
 
@@ -13,60 +15,83 @@ import { ConversationsService } from '../../services/conversations.service';
   styleUrls: ['./conversations.page.scss'],
   standalone: true,
   imports: [
-    CommonModule, RouterLink, IonContent, IonList, IonItem, 
-    IonLabel, IonHeader, IonToolbar, IonTitle, IonFab, IonFabButton, IonIcon
+    CommonModule, RouterLink, 
+    IonContent, IonList, IonItem, IonLabel, IonHeader, 
+    IonToolbar, IonTitle, IonFab, IonFabButton, IonIcon,
+    IonMenu, IonButtons, IonMenuButton, IonSearchbar, 
+    IonChip, IonAvatar, IonBadge, IonButton
   ]
 })
-
-
 export class ConversationsPage implements OnInit {
   conversas: any[] = [];
+  usuarioLogado: any = { nome: 'Carregando...', email: '', fotoUrl: '' };
 
-  constructor(private convService: ConversationsService) {}
+  constructor(
+    private convService: ConversationsService,
+    private router: Router,
+    private menuCtrl: MenuController
+  ) {}
 
   ngOnInit() {
-    // Pode deixar o ngOnInit vazio ou carregar aqui também,
-    // mas o verdadeiro herói será o método abaixo.
+    this.carregarUsuario();
   }
 
-  // 🔴 ADICIONE ESTE MÉTODO AQUI:
-  // Ele roda TODA VEZ que o usuário entra nessa tela.
   ionViewWillEnter() {
     this.carregarConversas();
   }
-// Adicione esta função auxiliar em algum lugar da classe (antes ou depois do carregarConversas)
+
+  carregarUsuario() {
+    const userStr = localStorage.getItem('usuario_logado');
+    if (userStr) {
+      this.usuarioLogado = JSON.parse(userStr);
+    }
+  }
+
   getMeuIdLogado(): number {
     const userStr = localStorage.getItem('usuario_logado');
     if (userStr) {
       const user = JSON.parse(userStr);
-      // Se o seu backend mandou o id solto no JSON, acessamos com user.id
-      // (Se o id estiver dentro de outro objeto, como user.usuario.id, ajustaremos depois)
       return user.id || 0; 
     }
     return 0;
   }
 
-  // Agora atualize o seu método carregarConversas:
   carregarConversas() {
     this.convService.listarConversas().subscribe({
       next: (data) => {
-        // PEGANDO O ID DINAMICAMENTE AGORA! 🚀
-        const meuIdLogado = this.getMeuIdLogado(); 
+        // Garante que o ID logado é um número
+        const meuIdLogado = Number(this.getMeuIdLogado()); 
 
         this.conversas = data.map(c => {
           if (c.nome) {
             c.nomeExibicao = c.nome;
+            c.foto = null; 
           } else if (c.participantes) {
-            const outro = c.participantes.find((p: any) => p.id !== meuIdLogado);
+            // Garante que a comparação seja Número com Número
+            const outro = c.participantes.find((p: any) => Number(p.id) !== meuIdLogado);
+            
             c.nomeExibicao = outro ? outro.nome : 'Desconhecido';
+            c.foto = outro ? (outro.fotoUrl || outro.foto) : null;
           }
+          
+          c.ultimaMensagem = c.ultimaMensagem || 'Toque para abrir a conversa...'; 
+          c.tempo = c.atualizadaEm ? new Date(c.atualizadaEm).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
+          c.naoLidas = c.mensagensNaoLidas || 0;
+
           return c;
         });
 
-        console.log('Conversas processadas:', this.conversas);
+        console.log('Conversas prontas para a tela:', this.conversas);
       },
       error: (err) => console.error('Erro ao buscar conversas', err)
     });
   }
-  
+  abrirChat(id: number) {
+    this.router.navigate(['/chat', id]);
+  }
+
+  irParaPerfil() {
+    this.menuCtrl.close(); // Fecha a gaveta lateral
+    this.router.navigateByUrl('/perfil');
+  }
 }

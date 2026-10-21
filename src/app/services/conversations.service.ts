@@ -11,12 +11,16 @@ export class ConversationsService {
   constructor(private http: HttpClient) { }
 
   // Método auxiliar para criar os headers com o Token JWT atual
-  private getHeaders(): HttpHeaders {
+private getHeaders(): HttpHeaders {
     const tokenStr = localStorage.getItem('token');
     let token = '';
+    
     if (tokenStr) {
       token = tokenStr.startsWith('{') ? JSON.parse(tokenStr).token : tokenStr;
     }
+
+    // 🔍 VAMOS VER O QUE ESTÁ INDO PARA O BACK-END!
+    console.log('Token capturado no serviço:', token);
 
     return new HttpHeaders({
       'Content-Type': 'application/json',

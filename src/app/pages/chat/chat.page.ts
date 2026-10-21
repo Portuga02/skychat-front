@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, IonContent } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConversationsService } from '../../services/conversations.service';
-import { WebsocketService } from '../../services/websocket.service'; // 1. IMPORTAR SERVIÇO
+import { WebsocketService } from '../../services/websocket.service';
 import { Subscription } from 'rxjs';
 
 interface Message {
@@ -23,58 +23,94 @@ interface Message {
   styleUrls: ['./chat.page.scss'],
 })
 export class ChatPage implements OnInit, OnDestroy {
+
+  @ViewChild(IonContent, { static: false }) content!: IonContent;
+
   contactName = 'Carregando...';
   contactOnline = true;
   draft = '';
+  mostrarEmojis = false;
+  listaEmojis = ['😀', '😂', '😍', '🙏', '👍', '🔥', '❤️', '🎉', '😢', '😎', '🤔', '🙌', '👀', '✨', '💯'];
   messages: Message[] = [];
-  private wsSubscription?: Subscription; // Para controlar a escuta
+  private wsSubscription?: Subscription;
 
   constructor(
-    private route: ActivatedRoute, 
+    private route: ActivatedRoute,
     private router: Router,
     private convService: ConversationsService,
-    private wsService: WebsocketService // 2. INJETAR SERVIÇO
-  ) {}
+    private wsService: WebsocketService
+  ) { }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
+
     if (id) {
       this.carregarDadosDaConversa(id);
       this.carregarMensagens(id);
 
-      // 3. CONECTAR E ESCUTAR O WEBSOCKET EM TEMPO REAL
       this.wsService.conectar(id);
-      
-      this.wsSubscription = this.wsService.escutarMensagens().subscribe(novaMensagem => {
-        const meuIdLogado = this.getMeuIdLogado();
-        const remetenteId = novaMensagem.remetenteId || (novaMensagem.remetente && novaMensagem.remetente.id);
 
-        // Evita duplicar a mensagem caso tenha sido você mesmo quem enviou (já tratamos no send)
-        if (remetenteId !== meuIdLogado) {
+      this.wsSubscription = this.wsService.escutarMensagens().subscribe(novaMensagem => {
+        const novaMensagemId = novaMensagem.id ? novaMensagem.id.toString() : null;
+        const mensagemJaExiste = this.messages.find(m => m.id === novaMensagemId);
+
+        if (mensagemJaExiste) {
+          return; 
+        }
+
+        const meuIdLogado = Number(this.getMeuIdLogado());
+        let remetenteId = 0;
+        
+        if (novaMensagem.remetenteId) {
+          remetenteId = Number(novaMensagem.remetenteId);
+        } else if (novaMensagem.remetente && novaMensagem.remetente.id) {
+          remetenteId = Number(novaMensagem.remetente.id);
+        }
+
+        console.log(`[WebSocket] Mensagem recebida. Remetente: ${remetenteId} | Meu ID logado: ${meuIdLogado}`);
+
+        if (remetenteId !== meuIdLogado && remetenteId !== 0) {
           this.messages.push({
-            id: novaMensagem.id.toString(),
+            id: novaMensagemId || new Date().getTime().toString(),
             text: novaMensagem.conteudo,
             time: new Date(novaMensagem.enviadaEm || new Date()).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
             fromMe: false
           });
+          
+          this.scrollToBottom();
         }
       });
     }
   }
 
   ngOnDestroy() {
-    // 4. Desconecta ou limpa a inscrição quando fecha o chat
     if (this.wsSubscription) {
       this.wsSubscription.unsubscribe();
     }
     this.wsService.desconectar();
   }
 
+  scrollToBottom() {
+    setTimeout(() => {
+      if (this.content) {
+        this.content.scrollToBottom(300);
+      }
+    }, 100);
+  }
+
+  toggleEmojis() {
+    this.mostrarEmojis = !this.mostrarEmojis;
+  }
+
+  addEmoji(emoji: string) {
+    this.draft += emoji;
+  }
+
   getMeuIdLogado(): number {
     const userStr = localStorage.getItem('usuario_logado');
     if (userStr) {
       const user = JSON.parse(userStr);
-      return user.id || 0; 
+      return user.id || 0;
     }
     return 0;
   }
@@ -102,25 +138,24 @@ export class ChatPage implements OnInit, OnDestroy {
           const remId = m.remetenteId || (m.remetente && m.remetente.id);
           return {
             id: m.id.toString(),
-            text: m.conteudo, 
+            text: m.conteudo,
             time: new Date(m.enviadaEm).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
             fromMe: remId === meuIdLogado
           };
         });
+        
+        this.scrollToBottom(); 
       },
       error: (err) => console.error('Erro ao carregar mensagens:', err)
     });
   }
 
-send() {
+  send() {
     const text = this.draft.trim();
     if (!text) return;
 
     const idConversa = this.route.snapshot.paramMap.get('id');
     if (!idConversa) return;
-
-    // 🔍 ADICIONE ESTE LOG AQUI PARA VER O QUE ESTÁ SENDO ENVIADO:
-    console.log('Enviando para o back-end:', { conversaId: Number(idConversa), conteudo: text });
 
     this.convService.enviarMensagem(idConversa, text).subscribe({
       next: (novaMensagem) => {
@@ -131,6 +166,8 @@ send() {
           fromMe: true
         });
         this.draft = '';
+        
+        this.scrollToBottom();
       },
       error: (err) => console.error('Erro ao enviar a mensagem:', err)
     });

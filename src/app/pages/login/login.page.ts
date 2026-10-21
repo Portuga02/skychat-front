@@ -23,17 +23,19 @@ export class LoginPage {
     private authService: AuthService
   ) {}
 
-  onLogin() {
+onLogin() {
     if (!this.email || !this.password) return;
     this.loading = true;
 
-    // 3. Substitua o setTimeout pela chamada real do backend (POST)
     this.authService.login({ email: this.email, senha: this.password }).subscribe({
       next: (resposta) => {
         console.log('Login bem-sucedido!', resposta);
         this.loading = false;
 
-        // Aqui você pode salvar os dados do usuário no localStorage se quiser:
+        // 1. SALVA O TOKEN ISOLADO (Essencial para não dar erro 403)
+        localStorage.setItem('token', resposta.token);
+
+        // 2. SALVA OS DADOS DO USUÁRIO (Essencial para parar o eco do chat)
         localStorage.setItem('usuario_logado', JSON.stringify(resposta));
 
         // Redireciona para as conversas
@@ -42,7 +44,6 @@ export class LoginPage {
       error: (erro) => {
         console.error('E-mail ou senha inválidos', erro);
         this.loading = false;
-        // Aqui você pode exibir um alerta para o usuário informando que a senha está incorreta
       }
     });
   }

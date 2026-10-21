@@ -1,29 +1,87 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Conversas</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- MENU LATERAL -->
+<ion-menu contentId="main-content" type="overlay">
+  <ion-content class="menu-content">
+    
+    <div class="menu-header">
+      <div class="menu-avatar">
+        <img *ngIf="usuarioLogado.fotoUrl" [src]="usuarioLogado.fotoUrl">
+        <span *ngIf="!usuarioLogado.fotoUrl">{{ usuarioLogado.nome.charAt(0).toUpperCase() }}</span>
+      </div>
+      <div class="menu-user-info">
+        <h2>{{ usuarioLogado.nome }}</h2>
+        <p>{{ usuarioLogado.email }}</p>
+      </div>
+    </div>
 
-<ion-content>
-  <div *ngIf="conversas.length === 0" class="ion-text-center ion-padding" style="margin-top: 40px;">
-    <h2>Nenhuma conversa ainda</h2>
-    <p>Clique no botão abaixo para escolher um contato e iniciar um bate-papo.</p>
-  </div>
-<ion-list *ngIf="conversas.length > 0">
-    <ion-item *ngFor="let c of conversas" [routerLink]="['/chat', c.id]">
-      <ion-label>
-        <!-- AQUI ESTÁ O SEGREDO: c.nomeExibicao -->
-        <h2>{{ c.nomeExibicao || 'Sem nome' }}</h2>
-        <p>{{ c.ultimaMensagem || 'Nenhuma mensagem' }}</p>
-      </ion-label>
-    </ion-item>
-  </ion-list>
+    <ion-list class="menu-list" lines="none">
+      <ion-item button>
+        <ion-icon name="people" slot="start"></ion-icon>
+        <ion-label>Novo Grupo</ion-label>
+      </ion-item>
+      <ion-item button>
+        <ion-icon name="person" slot="start"></ion-icon>
+        <ion-label>Contatos</ion-label>
+      </ion-item>
+      <ion-item button (click)="irParaPerfil()">
+        <ion-icon name="settings" slot="start"></ion-icon>
+        <ion-label>Configurações</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
 
-  <!-- Botão Flutuante (FAB) para abrir a tela de Contatos -->
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button routerLink="/contatos">
-      <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+<!-- PÁGINA PRINCIPAL -->
+<div class="ion-page" id="main-content">
+  <ion-header class="ion-no-border">
+    <ion-toolbar class="sky-toolbar">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title class="app-title">SkyChat</ion-title>
+      <ion-buttons slot="end">
+        <ion-button><ion-icon name="camera-outline"></ion-icon></ion-button>
+        <ion-button><ion-icon name="ellipsis-vertical"></ion-icon></ion-button>
+      </ion-buttons>
+    </ion-toolbar>
 
-</ion-content>
+    <!-- Barra de Pesquisa -->
+    <div class="search-container">
+      <ion-searchbar placeholder="Search or start a new chat" class="sky-searchbar"></ion-searchbar>
+    </div>
+  </ion-header>
+
+  <ion-content class="sky-content">
+    
+    <ion-list class="chat-list" lines="none">
+      <ion-item *ngFor="let c of conversas" button (click)="abrirChat(c.id)" class="chat-item">
+        
+        <!-- Esquerda: Avatar -->
+        <ion-avatar slot="start" class="chat-avatar">
+          <img *ngIf="c.foto" [src]="c.foto">
+          <span *ngIf="!c.foto">{{ c.nomeExibicao.charAt(0).toUpperCase() }}</span>
+        </ion-avatar>
+
+        <!-- Meio: Nome e Mensagem -->
+        <ion-label class="chat-middle">
+          <h2 class="chat-name">{{ c.nomeExibicao }}</h2>
+          <p class="chat-preview">{{ c.ultimaMensagem }}</p>
+        </ion-label>
+
+        <!-- Direita: Tempo e Notificação -->
+        <div class="chat-right" slot="end">
+          <span class="chat-time" [class.unread-text]="c.naoLidas > 0">{{ c.tempo }}</span>
+          <!-- Apenas para teste visual, troque c.naoLidas > 0 por true se quiser ver a bolinha verde agora -->
+          <ion-badge *ngIf="c.naoLidas > 0" class="unread-badge">{{ c.naoLidas }}</ion-badge>
+        </div>
+
+      </ion-item>
+    </ion-list>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button class="sky-fab">
+        <ion-icon name="chatbox-ellipses"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+
+  </ion-content>
+</div>
