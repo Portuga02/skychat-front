@@ -1,0 +1,62 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="sky-toolbar">
+    <ion-buttons slot="start">
+      <ion-button (click)="voltar()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Meu Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="sky-content">
+  <div class="profile-container">
+    
+    <!-- Seção do Avatar com ícone de Câmera -->
+    <div class="avatar-section">
+      <div class="avatar-wrapper">
+        <img *ngIf="usuario.fotoUrl" [src]="usuario.fotoUrl" alt="Foto de perfil">
+        <span *ngIf="!usuario.fotoUrl" class="avatar-placeholder">
+          {{ usuario.nome ? usuario.nome.charAt(0).toUpperCase() : '?' }}
+        </span>
+      </div>
+      <div class="edit-badge">
+        <ion-icon name="camera"></ion-icon>
+      </div>
+    </div>
+
+    <!-- Formulário Estilo Sky -->
+    <div class="form-section">
+      
+      <ion-item lines="none" class="sky-item">
+        <ion-icon name="person-outline" slot="start"></ion-icon>
+        <div class="input-wrapper">
+          <ion-label position="stacked">Nome de exibição</ion-label>
+          <ion-input [(ngModel)]="usuario.nome" placeholder="Digite seu nome"></ion-input>
+        </div>
+      </ion-item>
+
+      <ion-item lines="none" class="sky-item">
+        <ion-icon name="mail-outline" slot="start"></ion-icon>
+        <div class="input-wrapper">
+          <ion-label position="stacked">E-mail (Login)</ion-label>
+          <ion-input [(ngModel)]="usuario.email" disabled="true"></ion-input>
+        </div>
+      </ion-item>
+
+      <ion-item lines="none" class="sky-item">
+        <ion-icon name="image-outline" slot="start"></ion-icon>
+        <div class="input-wrapper">
+          <ion-label position="stacked">URL da Foto de Perfil</ion-label>
+          <ion-input [(ngModel)]="usuario.fotoUrl" placeholder="Cole o link de uma imagem"></ion-input>
+        </div>
+      </ion-item>
+
+      <ion-button expand="block" class="sky-btn-primary" (click)="salvar()">
+        <ion-icon name="save-outline" slot="start"></ion-icon>
+        SALVAR ALTERAÇÕES
+      </ion-button>
+
+    </div>
+  </div>
+</ion-content>

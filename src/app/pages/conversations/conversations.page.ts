@@ -1,127 +1,97 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
-import { Router, RouterLink } from '@angular/router';
-import { VideoCallComponent } from '../../components/video-call/video-call.component';
-import { VoiceCallComponent } from '../../components/voice-call/voice-call.component';
-import { ShellComponent } from '../../components/shell/shell.component';
-
-interface Conversation {
-  id: string;
-  name: string;
-  lastMessage: string;
-  time: string;
-  unread: number;
-  online: boolean;
-  pinned?: boolean;
-  avatarInitials: string;
-  avatarColor: string;
-}
-
-interface Message {
-  id: string;
-  text: string;
-  time: string;
-  fromMe: boolean;
-  seen?: boolean;
-}
-
-const DESKTOP_BREAKPOINT = 961;
+import { RouterLink, Router } from '@angular/router';
+import { 
+  IonContent, IonList, IonItem, IonLabel, IonHeader,
+  IonToolbar, IonTitle, IonFab, IonFabButton, IonIcon,
+  IonMenu, IonButtons, IonMenuButton, IonSearchbar, 
+  IonChip, IonAvatar, IonBadge, IonButton, MenuController
+} from '@ionic/angular/standalone';
+import { ConversationsService } from '../../services/conversations.service';
 
 @Component({
   selector: 'app-conversations',
-  standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule, VideoCallComponent, VoiceCallComponent, ShellComponent, RouterLink],
   templateUrl: './conversations.page.html',
   styleUrls: ['./conversations.page.scss'],
+  standalone: true,
+  imports: [
+    CommonModule, RouterLink, 
+    IonContent, IonList, IonItem, IonLabel, IonHeader, 
+    IonToolbar, IonTitle, IonFab, IonFabButton, IonIcon,
+    IonMenu, IonButtons, IonMenuButton, IonSearchbar, 
+    IonChip, IonAvatar, IonBadge, IonButton
+  ]
 })
-export class ConversationsPage {
-  searchTerm = '';
-  selected: Conversation | null = null;
-  draft = '';
-  showVideoCall = false;
-  showVoiceCall = false;
+export class ConversationsPage implements OnInit {
+  conversas: any[] = [];
+  usuarioLogado: any = { nome: 'Carregando...', email: '', fotoUrl: '' };
 
-  // TODO: substituir por dados reais vindos do WebSocket/STOMP + API
-  conversations: Conversation[] = [
-    { id: '1', name: 'Luna', lastMessage: 'Oi! Tudo bem? Vamos conversar...', time: '09:41', unread: 2, online: true, avatarInitials: 'L', avatarColor: '#e786c9' },
-    { id: '2', name: 'Família', lastMessage: 'Mãe: O almoço está pronto!', time: '08:15', unread: 5, online: false, avatarInitials: 'F', avatarColor: '#f2c879' },
-    { id: '3', name: 'Lucas', lastMessage: 'Enviou uma foto', time: 'Ontem', unread: 0, online: false, avatarInitials: 'LC', avatarColor: '#4ade80' },
-    { id: '4', name: 'Estudos', lastMessage: 'Você: Obrigado!', time: 'Ontem', unread: 0, online: false, pinned: true, avatarInitials: 'ES', avatarColor: '#6c5ce7' },
-    { id: '5', name: 'Trabalho', lastMessage: 'Carlos: Reunião às 15h', time: 'Seg', unread: 0, online: false, avatarInitials: 'T', avatarColor: '#38bdf8' },
-  ];
+  constructor(
+    private convService: ConversationsService,
+    private router: Router,
+    private menuCtrl: MenuController
+  ) {}
 
-  // TODO: carregar histórico real por conversa via REST + STOMP
-  messagesByConversation: Record<string, Message[]> = {
-    '1': [
-      { id: '1', text: 'Oi Sávio! 🌙', time: '09:36', fromMe: false },
-      { id: '2', text: 'Oi Luna! Tudo bem?', time: '09:36', fromMe: true, seen: true },
-      { id: '3', text: 'Tudo bem sim! E você?', time: '09:37', fromMe: false },
-      { id: '4', text: 'Estou ótimo! Que bom falar com você 💜', time: '09:37', fromMe: true, seen: true },
-      { id: '5', text: 'Vamos fazer uma chamada de vídeo?', time: '09:38', fromMe: true, seen: true },
-      { id: '6', text: 'Vamos sim! 😍', time: '09:38', fromMe: false },
-    ],
-  };
-
-  get filtered(): Conversation[] {
-    if (!this.searchTerm.trim()) return this.conversations;
-    const term = this.searchTerm.toLowerCase();
-    return this.conversations.filter(c => c.name.toLowerCase().includes(term));
+  ngOnInit() {
+    this.carregarUsuario();
   }
 
-  get activeMessages(): Message[] {
-    return this.selected ? (this.messagesByConversation[this.selected.id] || []) : [];
+  ionViewWillEnter() {
+    this.carregarConversas();
   }
 
-  constructor(private router: Router) {}
-
-  isDesktop(): boolean {
-    return window.innerWidth >= DESKTOP_BREAKPOINT;
-  }
-
-  openChat(conversation: Conversation) {
-    if (this.isDesktop()) {
-      this.selected = conversation;
-    } else {
-      this.router.navigate(['/chat', conversation.id]);
+  carregarUsuario() {
+    const userStr = localStorage.getItem('usuario_logado');
+    if (userStr) {
+      this.usuarioLogado = JSON.parse(userStr);
     }
   }
 
-  send() {
-    const text = this.draft.trim();
-    if (!text || !this.selected) return;
-    const list = this.messagesByConversation[this.selected.id] || [];
-    list.push({
-      id: Date.now().toString(),
-      text,
-      time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-      fromMe: true,
+  getMeuIdLogado(): number {
+    const userStr = localStorage.getItem('usuario_logado');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      return user.id || 0; 
+    }
+    return 0;
+  }
+
+  carregarConversas() {
+    this.convService.listarConversas().subscribe({
+      next: (data) => {
+        // Garante que o ID logado é um número
+        const meuIdLogado = Number(this.getMeuIdLogado()); 
+
+        this.conversas = data.map(c => {
+          if (c.nome) {
+            c.nomeExibicao = c.nome;
+            c.foto = null; 
+          } else if (c.participantes) {
+            // Garante que a comparação seja Número com Número
+            const outro = c.participantes.find((p: any) => Number(p.id) !== meuIdLogado);
+            
+            c.nomeExibicao = outro ? outro.nome : 'Desconhecido';
+            c.foto = outro ? (outro.fotoUrl || outro.foto) : null;
+          }
+          
+          c.ultimaMensagem = c.ultimaMensagem || 'Toque para abrir a conversa...'; 
+          c.tempo = c.atualizadaEm ? new Date(c.atualizadaEm).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
+          c.naoLidas = c.mensagensNaoLidas || 0;
+
+          return c;
+        });
+
+        console.log('Conversas prontas para a tela:', this.conversas);
+      },
+      error: (err) => console.error('Erro ao buscar conversas', err)
     });
-    this.messagesByConversation[this.selected.id] = list;
-    this.draft = '';
+  }
+  abrirChat(id: number) {
+    this.router.navigate(['/chat', id]);
   }
 
-  startVideoCall() {
-    this.showVideoCall = true;
-  }
-
-  endVideoCall() {
-    this.showVideoCall = false;
-  }
-
-  startVoiceCall() {
-    this.showVoiceCall = true;
-  }
-
-  endVoiceCall() {
-    this.showVoiceCall = false;
-  }
-  sair() {
-    // Remove os dados do usuário salvos no login
-    localStorage.removeItem('usuario_logado');
-
-    // Redireciona de volta para a tela de login
-    this.router.navigateByUrl('/login');
+  irParaPerfil() {
+    this.menuCtrl.close(); // Fecha a gaveta lateral
+    this.router.navigateByUrl('/perfil');
   }
 }

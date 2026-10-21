@@ -200,3 +200,295 @@
   --border-radius: 50%; width: 42px; height: 42px; margin: 0;
   &.active { --background: var(--sky-purple); }
 }
+.contact-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.contact-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--sky-purple);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.contact-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--sky-text);
+}
+
+.contact-status {
+  font-size: 11.5px;
+  color: var(--sky-text-dim);
+
+  &.online { color: var(--sky-online); }
+}
+
+.chat-page {
+  --background: var(--sky-bg);
+}
+
+.day-divider {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0;
+
+  span {
+    font-size: 11.5px;
+    color: var(--sky-text-dim);
+    background: var(--sky-bg-elevated);
+    padding: 4px 14px;
+    border-radius: 100px;
+  }
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 16px 12px;
+}
+
+.bubble-row {
+  display: flex;
+  justify-content: flex-start;
+
+  &.mine { justify-content: flex-end; }
+}
+
+.bubble {
+  max-width: 78%;
+  background: var(--sky-bg-elevated);
+  border-radius: 16px 16px 16px 4px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &.mine {
+    background: var(--sky-purple);
+    border-radius: 16px 16px 4px 16px;
+  }
+}
+
+.bubble-text {
+  font-size: 14.5px;
+  color: var(--sky-text);
+  line-height: 1.4;
+}
+
+.bubble.mine .bubble-text { color: #fff; }
+
+.bubble-time {
+  font-size: 10.5px;
+  color: var(--sky-text-dim);
+  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+
+  ion-icon {
+    font-size: 13px;
+    color: var(--sky-text-dim);
+
+    &.seen { color: #38bdf8; }
+  }
+}
+
+.bubble.mine .bubble-time { color: rgba(255,255,255,0.7); }
+
+.composer-toolbar {
+  --background: var(--sky-bg-elevated);
+  --border-color: var(--sky-border);
+  padding: 6px 8px;
+}
+
+.composer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.composer-icon {
+  --color: var(--sky-text-dim);
+  --padding-start: 6px;
+  --padding-end: 6px;
+  font-size: 22px;
+}
+
+.composer-input {
+  --background: var(--sky-bg);
+  --color: var(--sky-text);
+  --placeholder-color: var(--sky-text-dim);
+  --padding-start: 14px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  border-radius: 100px;
+  flex: 1;
+}
+
+.send-btn {
+  --background: var(--sky-border);
+  --background-activated: var(--sky-purple-dark);
+  --border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  margin: 0;
+
+  &.active {
+    --background: var(--sky-purple);
+  }
+}
+bubble-row {
+  display: flex;
+  align-items: flex-end; /* Alinha o avatar com a base do balão */
+  margin-bottom: 12px;
+  gap: 8px; /* Espaço entre o avatar e o balão */
+}
+
+.bubble-row.mine {
+  justify-content: flex-end;
+}
+
+.message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #444; /* Cor de fundo do avatar */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* A cápsula que segura o nome e o balão */
+.message-content {
+  display: flex;
+  flex-direction: column;
+  max-width: 85%; /* Dá mais espaço de tela para a mensagem crescer */
+  min-width: 0; /* Previne que o flexbox esprema o conteúdo */
+}
+
+/* O formato do balão */
+.bubble {
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  width: fit-content; /* Faz o balão "abraçar" o texto perfeitamente */
+  min-width: 80px; /* Garante uma largura mínima para a data não espremer o texto */
+}
+
+/* O texto dentro do balão */
+.bubble-text {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  word-break: break-word; /* Só quebra no meio se for uma palavra gigante sem espaços */
+  overflow-wrap: break-word;
+  white-space: pre-wrap; /* Respeita os espaços normais que você digita */
+}
+
+.message-content.mine {
+  align-items: flex-end;
+}
+
+.message-name {
+  font-size: 12px;
+  color: #a0a0a0;
+  margin-bottom: 4px;
+  margin-left: 4px;
+}
+
+/* --- BANDEJA DE EMOJIS --- */
+.emoji-tray {
+  background: #1e1e1e;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  border-top: 1px solid #333;
+}
+
+.emoji-item {
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.emoji-item:active {
+  transform: scale(1.3);
+}
+/* Estrutura do item da lista */
+.chat-item {
+  --background: #0b0f19;
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  margin-bottom: 2px;
+}
+
+.chat-middle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 10px;
+
+  .chat-name {
+    margin: 0 0 4px 0; 
+    font-size: 16px; 
+    color: white; 
+    font-weight: 600;
+  }
+  
+  .chat-preview {
+    margin: 0; 
+    font-size: 14px; 
+    color: #8c8c8f;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+  }
+}
+
+/* Coluna da direita (Tempo e Badge) */
+.chat-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Alinha tudo à direita */
+  justify-content: flex-start;
+  min-width: 65px;
+  margin-top: 8px;
+
+  .chat-time {
+    font-size: 12px; 
+    color: #8c8c8f;
+    margin-bottom: 6px;
+    &.unread-text { color: #25d366; font-weight: bold; }
+  }
+
+  .unread-badge {
+    --background: #25d366;
+    --color: #0b0f19;
+    font-size: 11px;
+    border-radius: 50%; /* Círculo perfeito */
+    min-width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 6px;
+    font-weight: bold;
+  }
+}

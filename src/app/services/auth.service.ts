@@ -2,17 +2,39 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export interface RegisterPayload {
+  nome: string;
+  email: string;
+  senha: string;
+}
+
+export interface LoginPayload {
+  email: string;
+  senha: string;
+}
+
+export interface AuthResponse {
+  token: string;
+  id: number;
+  nome: string;
+  email: string;
+  fotoUrl?: string;
+  status?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  // URL da API do seu Spring Boot que criamos no Eclipse
   private apiUrl = 'http://localhost:8080/api/auth';
 
   constructor(private http: HttpClient) {}
 
-  // Método que faz o POST enviando o objeto com email e senha
-  login(credenciais: { email: string; senha: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credenciais);
+  login(credenciais: LoginPayload): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credenciais);
+  }
+
+  register(dados: RegisterPayload): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, dados);
   }
 }
